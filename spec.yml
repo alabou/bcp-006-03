@@ -1,10 +1,10 @@
-amwa_id: BCP-TEMPLATE
-url: https://specs.amwa.tv/bcp-template
-name: AMWA NMOS Best Common Practice Template
+amwa_id: BCP-NMOS-H265
+url: https://specs.amwa.tv/bcp-nmos-h265
+name: AMWA NMOS With H.265
 status: Continuing
-repo_name: bcp-template
-alt_repo_name: nmos-bcp-template
-repo_url: https://github.com/AMWA-TV/bcp-template
+repo_name: bcp-nmos-h265
+alt_repo_name: bcp-nmos-h265
+repo_url: https://github.com/AMWA-TV/bcp-nmos-h265
 releases:
 default_branch: main
 show_in_index: false
