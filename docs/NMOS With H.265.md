@@ -65,7 +65,7 @@ These attributes provide information for Controllers and Users to evaluate strea
 - [Components](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#components)
   The Flow resource MUST indicate the color (sub-)sampling, width, height and depth of the associated uncompressed picture using the `components` attribute. The `components` array values MUST correspond to the stream's active parameter sets. A Flow MUST track the stream's current active parameter sets.
 
-Informative note: ST 2110-22 does not require the `sampling` or `depth` SDP parameters. RFC 6184 does not define any such SDP parameters. The `sampling` and `depth` of the associated uncompressed picture could be derived from the H.265 active parameter sets by a Receiver.
+Informative note: ST 2110-22 does not require the `sampling` or `depth` SDP parameters. RFC 7798 does not define any such SDP parameters. The `sampling` and `depth` of the associated uncompressed picture could be derived from the H.265 active parameter sets by a Receiver.
 
 - [Profile](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#profile)
   The Flow resource MUST indicate the H.265 profile, which defines algorithmic features and limits that MUST be supported by all decoders conforming to that profile. The stream's active parameter sets MUST be compliant with the `profile` attribute of the Flow. The permitted `profile` values are strings, defined as per ITU-T Rec. H.265 Annex A
@@ -137,7 +137,7 @@ The Flow's `level` attribute map to the `level-id` and `tier-flag` parameters of
 
 The Flow's `level` attribute map to the members level_idc and tier_flag of the HEVC_video_descriptor of an MPEG2-TS transport stream. See section Multiplexed Flows.
 
-Informative note: The Flow's `profile` and `level` attributes are always required. The SDP transport file `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints`, `level-id` and `tier-flag` parameters MAY be omitted when matching the default value.
+Informative note: The Flow's `profile` and `level` attributes are always required. The SDP transport file `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints`, `level-id` and `tier-flag` parameters may be omitted when matching the default value.
 
 - [Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#bit-rate)
   The Flow resource MUST indicate the target encoding bit rate (kilobits/second) of the H.265 bitstream. The stream's active parameter sets MUST be compliant with the `bit_rate` attribute of the Flow. The `bit_rate` integer value is expressed in units of 1000 bits per second, rounding up.
@@ -154,7 +154,40 @@ Informative note: For streams compliant with ST 2110-22, the constant bit rate m
 Examples Flow resources are provided in [Examples](../examples/).
 
 ### Senders
+
 #### RTP transport
+
+For Nodes transmitting H.265 using the RTP payload mapping defined by RFC 7798, the Sender resource MUST indicate `urn:x-nmos:transport:rtp` or one of its subclassifications for the `transport` attribute.
+
+Sender resources provide no indication of media type or format, since this is described by the associated Flow resource.
+
+For Nodes implementing IS-04 v1.3 or higher, the following additional requirements on the Sender resource apply.
+
+In addition to those attributes defined in IS-04 for Senders, the following attributes defined in the [Sender Attributes Register](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/) of the NMOS Parameter Registers are used for H.265.
+
+- [Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#bit-rate)
+  The Sender resource SHOULD indicate the target bit rate (kilobits/second) including the transport overhead of the H.265 stream. The value is for the IP packets, so for the RTP payload format per RFC 7798, that includes the RTP, UDP and IP packet headers and the payload. The `bit_rate` integer value is expressed in units of 1000 bits per second, rounding up. The Sender's transport `bit_rate` value MUST derive from the Flow's encoding `bit_rate` value and according to the Flow's `constant_bit_rate` attribute it corresponds to a constant bit rate or a maximum bit rate. 
+
+  If the Sender meets the traffic shaping and delivery timing requirements specified for ST 2110-22 it MUST indicate the transport `bit_rate`.
+
+  Informative note: This definition is consistent with the definition of the bit rate attribute required by ST 2110-22 in the SDP media description. There is no such SDP attribute in RFC 7798.
+
+- [Packet Transmission Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#packet-transmission-mode)
+  A Sender using the interleaved mode MUST include the `packet_transmission_mode` attribute and set it to `interleaved_nal_units`. The `packet_transmission_mode` attribute maps the the RFC 7798 `sprop-max-don-diff` parameter with `non_interleaved_nal_units` corresponding to value 0, `interleaved_nal_units` to value greater than 0. Since the default value of this attribute is `non_interleaved_nal_units`, the Sender MAY omit this attribute when using that mode. 
+
+- [ST 2110-21 Sender Type](https://specs.amwa.tv/nmos-parameter-registers/branches/main/sender-attributes/#st-2110-21-sender-type)
+  If the Sender complies with the traffic shaping and delivery timing requirements for ST 2110-22, it MUST include the `st2110_21_sender_type` attribute.
+
+- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  A Sender operating in strict-Flow mode MUST set the `parameter_sets_flow_mode` attribute to `strict` and if operating in static-Flow mode it MUST set the `parameter_sets_flow_mode` attribute to `static`. Otherwise it MAY omit or set the `parameter_sets_flow_mode` attribute to `dynamic`. If unspecified the default value is `dynamic`. See the "Parameter Sets" section for more details.
+
+- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)
+  A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the "Parameter Sets" section for more details.
+
+The H.265 encoder associated with a Sender MUST produces an H.265 bitstream that is compliant with the `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints`, `level-id` and `tier-flag` explicitely or implicitely declared in the stream's associated SDP transport file or the profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream.
+
+An example Sender resource is provided in the [Examples](../examples/).
+
 ##### SDP format-specific parameters
 
 This section applies to a Sender with RTP transport directly associated to an H.265 Flow through the Sender's `flow_id` attribute.
@@ -172,7 +205,7 @@ Therefore:
 
 - The `sprop-depack-buf-nalus`, `sprop-depack-buf-bytes` format-specific parameters SHOULD be included with the correct value if `sprop-max-don-diff` is not 0 unless it corresponds to the default value.
 
-- The `sprop-vps`, `sprop-sps` and `sprop-pps` MUST always be included if the Sender `parameter_sets_transport_mode` property is `out_of_band` and SHOULD be included if the property is `in_and_out_of_band`.
+- The `sprop-vps`, `sprop-sps` and `sprop-pps` MUST always be included if the Sender `parameter_sets_transport_mode` attribute is `out_of_band` and SHOULD be included if the attribute is `in_and_out_of_band`.
 
 The stream's active parameter sets MUST be compliant with the format-specific parameters, except `sprop-vps`, `sprop-sps` and `sprop-pps`, declared in the "fmtp=" attribute of an SDP transport file.
 
@@ -181,7 +214,26 @@ If the Sender meets the traffic shaping and delivery timing requirements specifi
 If the Sender meets the traffic shaping and delivery timing requirements specified for IPMX, the SDP transport file MUST also comply with the provisions of IPMX.
 
 #### Other transports
+
+For Nodes transmitting H.265 using other transports, the Sender resource MUST indicate the associated `urn:x-nmos:transport:` label of the transport or one of its subclassifications for the `transport` attribute.
+
+Sender resources provide no indication of media type or format, since this is described by the associated Flow resource.
+
+- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  A Sender operating in strict-Flow mode MUST set the `parameter_sets_flow_mode` attribute to `strict` and if operating in static-Flow mode it MUST set the `parameter_sets_flow_mode` attribute to `static`. Otherwise it MAY omit or set the `parameter_sets_flow_mode` attribute to `dynamic`. If unspecified the default value is `dynamic`. See the "Parameter Sets" section for more details.
+
+- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)
+  A Sender operating with out-of-band parameter sets MUST set the `parameter_sets_transport_mode` attribute to either `out_of_band` or `in_and_out_of_band`. Otherwise it MAY omit or set the `parameter_sets_transport_mode` attribute to `in_band`. If unspecified the default value is `in_band`. See the "Parameter Sets" section for more details.
+
+Informative note: The out of band mechanism used to transport parameter sets is transport specific and out of scope of this specification.
+
+The H.265 encoder associated with a Sender MUST produces an H.265 bitstream that is compliant with the profile and level explicitely or implicitely declared using and out-of-band transport specific mechanism or in the profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream.
+
 #### Multiplexed Flows
+
+A Sender associated with a multiplexed Flow having some H.265 parents Flows MAY declare the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` properties that MUST apply for all the parents H.265 bistreams flowing through the Sender.
+
+Informative note: This applies to all the multiplexed video and audio Flows having the `parameter_sets_flow_mode` and `parameter_sets_transport_mode` attributes defined.
 
 ## H.265 IS-04 Receivers
 ### RTP transport
@@ -196,6 +248,8 @@ If the Sender meets the traffic shaping and delivery timing requirements specifi
 ## H.265 IS-11 Senders and Receivers
 ### RTP transport
 ### Other transports
+
+## Parameter Sets
 
 ## Controllers
 
