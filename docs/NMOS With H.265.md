@@ -9,22 +9,6 @@
 
 _(c) AMWA 2023, CC Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)_
 
-![NMOS logo](images/NMOS-logo.png)
-
-> ## Instructions
->
-> Add your content as (GitHub Flavoured) Markdown documents.
->
-> Put diagrams (ideally PNG with encapsulated draw.io source) in the `images/` sub-directory.
->
-> Follow the [Style Guide](Style%20Guide.md).
->
-> Make a bulleted list of documents in `README.md` in this directory.
-> 
-> Set the repo name used to get the Lint and Render status in the top-level `README.md` (four changes needed).
->
-> Set the value of `amwa_id` in `.render/_config.yml` to the AMWA-assigned ID.
-
 ## Introduction
 
 H.265 is a video compression technology standardized in Rec. [ITU-T H.265][H.265] | ISO/IEC 23008-2.
@@ -33,7 +17,7 @@ A companion RTP payload format specification was developed through the IETF Payl
 The BCP-006-03 specification includes support for bitstreams that are compliant with the clauses of the main document and annexes A, B, C, D and E of the Rec. [ITU-T H.265][H.265] specification. It excludes support for bitstreams that are compliant with other annexes of the specification.
 > Annex F (multi-layers extensions), Annex G (multiview high efficiency video coding), Annex H (scalable high efficiency video coding) and Annex I (3D high efficiency video coding) are not supported.
 
-The Rec. [ITU-T H.222.0][H.222.0] specification and associated amendments describe the embedding of an H.265 stream in an MPEG2-TS transport stream. An RTP payload format specification for MPEG2-TS transport stream was developed through the IETF Payloads working group, IETF [RFC 2550][RFC-2550] for transport over RTP. Other normative documents describe the requirements for the streaming of an MPEG2-TS transport stream over other non-RTP transports.
+The Rec. [ITU-T H.222.0][H.222.0] specification and associated amendments describe the embedding of an H.265 stream in an MPEG2-TS transport stream. An RTP payload format specification for MPEG2-TS transport stream was developed through the IETF Payloads working group, IETF [RFC 2250][RFC-2250] for transport over RTP. Other normative documents describe the requirements for the streaming of an MPEG2-TS transport stream over other non-RTP transports.
 
 The [Society of Media Professionals, Technologists and Engineers][SMPTE] developed Standard [ST 2110-22][ST-2110-22] of the ST 2110 suite of protocols, which cover the end-to-end application use of constant bit rate compression for video over managed IP networks.
 
@@ -85,7 +69,7 @@ These attributes provide information for Controllers and Users to evaluate strea
 Informative note: ST 2110-22 does not require the `sampling` or `depth` SDP parameters. RFC 6184 does not define any such SDP parameters. The `sampling` and `depth` of the associated uncompressed picture could be derived from the H.265 active parameter sets by a Receiver.
 
 - [Profile](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#profile)
-The Flow resource MUST indicate the H.265 profile, which defines algorithmic features and limits that MUST be supported by all decoders conforming to that profile. The stream's active parameter sets MUST be compliant with the `profile` attribute of the Flow. The permitted `profile` values are strings, defined as per ITU-T Rec. H.265 Annex A
+  The Flow resource MUST indicate the H.265 profile, which defines algorithmic features and limits that MUST be supported by all decoders conforming to that profile. The stream's active parameter sets MUST be compliant with the `profile` attribute of the Flow. The permitted `profile` values are strings, defined as per ITU-T Rec. H.265 Annex A
 
   - "Main" (Default if not specified in the SDP transport file)
   - "Main10"
@@ -133,7 +117,7 @@ The Flow's `profile` attribute maps to the `profile-space`, `profile-id`, `profi
 The Flow's `profile` attribute maps to the members profile_space, profile_idc, profile_compatibility_indication, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits and  of the HEVC_video_descriptor of an MPEG2-TS transport stream. See section Multiplexed Flows.
 
 - [Level](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#level)
- The Flow resource MUST indicate the H.265 level, which defines a set of limits on the values that may be taken by the syntax elements of an H.265 bitstream. The stream's active parameter sets MUST be compliant with the `level` attribute of the Flow. The permitted `level` values are strings, defined as per ITU-T Rec. H.265 Annex A
+  The Flow resource MUST indicate the H.265 level, which defines a set of limits on the values that may be taken by the syntax elements of an H.265 bitstream. The stream's active parameter sets MUST be compliant with the `level` attribute of the Flow. The permitted `level` values are strings, defined as per ITU-T Rec. H.265 Annex A
   - "Main-1"
   - "Main-2", "Main-2.1"
   - "Main-3"
@@ -161,7 +145,7 @@ Informative note: The Flow's `profile` and `level` attributes are always require
 
   Informative note: The H.265 bitstream is not required to transport hypothetical reference decoder (HRD) parameters such that an H.265 decoder may not know the actual target bit rate of a stream. There are bit rate limits imposed by the level of the coded bitstream. IS-11 may be used to constraint the Sender to a target bit rate compatible with the Receiver Capabilities.
 
- - [Constant Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#constant-bit-rate)
+- [Constant Bit Rate](https://specs.amwa.tv/nmos-parameter-registers/branches/main/flow-attributes/#constant-bit-rate)
   The Flow resource MUST indicate if it operates in constant bit rate (CBR) mode or variable bit rate mode (VBR or other). When operating in constant bit rate mode the `bit_rate` corresponds to the constant encoding bit rate. Otherwise it corresponds to the maximum encoding bit rate. Since the default value of this attribute is `false`, a Flow MAY omit this attribute when using a variable bit rate mode.
 
 Informative note: The maximum bit rate information relates to the codec profile / level limits and the HRD buffering model. The CBR versus VBR mode of operation of the encoder provide essential clues about the coded bitstream produced.
@@ -216,15 +200,12 @@ If the Sender meets the traffic shaping and delivery timing requirements specifi
 
 ## Controllers
 
-
-
-[BCP-004-01]: https://specs.amwa.tv/bcp-004-01/ "AMWA BCP-004-01 NMOS Receiver Capabilities"
 [H.265]: https://www.itu.int/rec/T-REC-H.265 "High efficiency video coding"
 [H.222.0]: https://www.itu.int/rec/T-REC-H.222.0 "Generic coding of moving pictures and associated audio information: Systems"
 [RFC-2119]: https://tools.ietf.org/html/rfc2119 "Key words for use in RFCs"
 [RFC-7798]: https://tools.ietf.org/html/rfc7798 "RTP Payload Format for High Efficiency Video Coding (HEVC)"
-[RFC-2250]: https://www.rfc-editor.org/rfc/rfc2250 "RTP Payload Format for MPEG1/MPEG2 Video"
-[RFC-5576]: https://www.rfc-editor.org/rfc/rfc5576 "Source-Specific Media Attributes in the Session Description Protocol (SDP)"
+[RFC-2250]: https://tools.ietf.org/html/rfc2250 "RTP Payload Format for MPEG1/MPEG2 Video"
+[RFC-5576]: https://tools.ietf.org/html/rfc5576 "Source-Specific Media Attributes in the Session Description Protocol (SDP)"
 [IS-04]: https://specs.amwa.tv/is-04/ "AMWA IS-04 NMOS Discovery and Registration Specification"
 [IS-05]: https://specs.amwa.tv/is-05/ "AMWA IS-05 NMOS Device Connection Management Specification"
 [NMOS Parameter Registers]: https://specs.amwa.tv/nmos-parameter-registers/ "Common parameter values for AMWA NMOS Specifications"
