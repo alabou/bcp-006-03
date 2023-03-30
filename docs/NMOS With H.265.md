@@ -1,8 +1,7 @@
 # AMWA BCP-006-03: NMOS With H.265
+{:.no_toc}
 
 > WORK IN PROGRESS ... DOCUMENT UNDER CONSTRUCTION
-
-{:.no_toc}
 
 - A markdown unordered list which will be replaced with the ToC, excluding the "Contents header" from above
 {:toc}
