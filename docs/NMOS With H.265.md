@@ -303,11 +303,11 @@ The following parameter constraints can be used to express limits or preferences
 
   A Receiver declares the `parameter_sets_transport_mode` capability to indicate that it supports bitstreams using parameter sets provided either only out-of-band, only in-band or in-and-out-of-band. The in-band parameter sets MAY update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `in_band` or `in_and_out_of_band` capabilities MUST be capable of decoding in-band parameter sets that update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `out_of_band` capability MUST be capable of decoding in-band parameter sets that duplicate the parameter sets received out-of-band.
 
-  All the parameter sets used by the bitstream MUST be compliant with the `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints`, `level-id` and `tier-flag` explicitely or implicitely declared in the stream's associated SDP transport file or the profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MAY be specified out-of-band using the `sprop-vps`, `sprop-sps` and `sprop-pps` parameters of an SDP transport file, in-band through the H.265 bitstream or in-and-out-of-band usign both mechanisms. See the "Parameter Sets" section for more details.
+  All the parameter sets used by the bitstream MUST be compliant with the `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints`, `level-id` and `tier-flag` explicitely or implicitely declared in the stream's associated SDP transport file or in the members profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MAY be specified out-of-band using the `sprop-vps`, `sprop-sps` and `sprop-pps` parameters of an SDP transport file, in-band through the H.265 bitstream or in-and-out-of-band usign both mechanisms. See the "Parameter Sets" section for more details.
 
   A Receiver supporting `in_and_out_of_band` MUST also support the `in_band` and `out_of_band` modes. Such Receiver SHOULD have all "in_band", "out_of_band" and "in_and_out_of_band" values enumerated in the Receiver Capabilities in order to allow Senders operating in any `parameter_sets_transport_mode`.
 
-For Nodes consuming H.264 using the RTP payload mapping defined by RFC 2250, the Receiver resource MUST indicate `urn:x-nmos:transport:rtp` or one of its subclassifications for the `transport` attribute.
+For Nodes consuming H.265 using the RTP payload mapping defined by RFC 2250, the Receiver resource MUST indicate `urn:x-nmos:transport:rtp` or one of its subclassifications for the `transport` attribute.
 
 The following parameter constraints can be used to express limits or preferences specifically defined for H.265 decoders:
 
@@ -315,21 +315,21 @@ The following parameter constraints can be used to express limits or preferences
   
   A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that an active parameter set is associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.265 bitstream where the associated Flow properties change dynamically. 
   
-  A Receiver supporting the `dynamic` mode MUST also support the `strict` and `static` modes. Such Receiver SHOULD have `strict`, `static` and `dynamic` values enumerated in the Receiver Capability in order to allow Senders operating in any `parameter_sets_flow_mode`.
+  A Receiver consuming H.265 using the RTP payload mapping defined by RFC 2250 MUST support the `dynamic` mode or be unconstrained.
 
 - [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)
 
   A Receiver declares the `parameter_sets_transport_mode` capability to indicate that it supports bitstreams using parameter sets provided either only out-of-band, only in-band or in-and-out-of-band. The in-band parameter sets MAY update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `in_band` or `in_and_out_of_band` capabilities MUST be capable of decoding in-band parameter sets that update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `out_of_band` capability MUST be capable of decoding in-band parameter sets that duplicate the parameter sets received out-of-band.
 
-  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitely or implicitely declared using an out-of-band transport specific mechanism or the profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MAY be specified in-band through the H.265 bitstream, out-of-band or in-and-out-of-band usign an unspecified out-of-band mechanisms. See the "Parameter Sets" section for more details.
+  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitely or implicitely declared in the members profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MAY be specified in-band through the H.265 bitstream, out-of-band or in-and-out-of-band usign an unspecified out-of-band mechanisms. See the "Parameter Sets" section for more details.
 
-  A Receiver supporting `in_and_out_of_band` MUST also support the `in_band` and `out_of_band` modes. Such Receiver SHOULD have all "in_band", "out_of_band" and "in_and_out_of_band" values enumerated in the Receiver Capabilities in order to allow Senders operating in any `parameter_sets_transport_mode`.
+  A Receiver consuming H.265 using the RTP payload mapping defined by RFC 2250 MUST support the `in_band` mode or be unconstrained.
 
 ### Other transports
 
 For Nodes consuming H.265 using other transports, the Receiver resource MUST indicate the associated `urn:x-nmos:transport:` label of the transport or one of its subclassifications for the `transport` attribute.
 
-The following parameter constraints can be used to express limits or preferences specifically defined for H.265 decoders:
+For Receivers indicating `urn:x-nmos:format:video` for the `format` attribute, the following parameter constraints can be used to express limits or preferences specifically defined for H.265 decoders:
 
 - [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
   
@@ -343,9 +343,25 @@ The following parameter constraints can be used to express limits or preferences
 
   Informative note: The out of band mechanism used to transmit parameter sets is transport specific and out of the scope of this specification.
 
-  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitely or implicitely declared using and out-of-band transport specific mechanism or in the profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MAY be specified in-band through the H.265 bitstream, out-of-band or in-and-out-of-band usign an unspecified out-of-band mechanisms. See the "Parameter Sets" section for more details.
+  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitely or implicitely declared using and out-of-band transport specific mechanism or in the members profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MAY be specified in-band through the H.265 bitstream, out-of-band or in-and-out-of-band usign an unspecified out-of-band mechanisms. See the "Parameter Sets" section for more details.
 
   A Receiver supporting `in_and_out_of_band` MUST also support the `in_band` and `out_of_band` modes. Such Receiver SHOULD have all "in_band", "out_of_band" and "in_and_out_of_band" values enumerated in the Receiver Capabilities in order to allow Senders operating in any `parameter_sets_transport_mode`.
+
+For Receivers indicating `urn:x-nmos:format:mux` for the `format` attribute, the following parameter constraints can be used to express limits or preferences specifically defined for H.265 decoders:
+
+- [Parameter Sets Flow Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-flow-mode)
+  
+  A Receiver declares the `parameter_sets_flow_mode` capability to indicate that it supports bitstreams using parameter sets associated with strictly one (`strict`), one (`static`) or multiple (`dynamic`) Flows. Considering that an active parameter set is associated with a specific Flow, this capability indicates that a Receiver is capable or not of decoding an H.265 bitstream where the associated Flow properties change dynamically. 
+
+  A Receiver consuming H.265 from a multiplexed stream MUST support the `dynamic` mode or be unconstrained.
+
+- [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)
+
+  A Receiver declares the `parameter_sets_transport_mode` capability to indicate that it supports bitstreams using parameter sets provided either only out-of-band, only in-band or in-and-out-of-band. The in-band parameter sets MAY update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `in_band` or `in_and_out_of_band` capabilities MUST be capable of decoding in-band parameter sets that update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `out_of_band` capability MUST be capable of decoding in-band parameter sets that duplicate the parameter sets received out-of-band.
+
+  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitely or implicitely declared in the members profile_idc, level_idc and constraint_set\<N\>_flag of the AVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MUST be specified in-band through the H.265 bitstream. See the "Parameter Sets" section for more details.
+
+  A Receiver consuming H.265 from a multiplexed stream MUST support the `in_band` mode or be unconstrained.
 
 ## H.265 IS-05 Senders and Receivers
 ### RTP transport
