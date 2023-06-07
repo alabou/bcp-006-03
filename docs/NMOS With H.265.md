@@ -287,7 +287,7 @@ The following parameter constraints can be used to express limits or preferences
 - [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)  
   A Receiver declares the `parameter_sets_transport_mode` capability to indicate that it supports bitstreams using parameter sets provided either only out-of-band, only in-band or in-and-out-of-band. The in-band parameter sets MAY update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `in_band` or `in_and_out_of_band` capabilities MUST be capable of decoding in-band parameter sets that update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `out_of_band` capability MUST be capable of decoding in-band parameter sets that duplicate the parameter sets received out-of-band.
 
-  All the parameter sets used by the bitstream MUST be compliant with the `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints`, `level-id` and `tier-flag` explicitly or implicitly declared in the stream's associated SDP transport file. The parameter sets MAY be specified out-of-band using the `sprop-vps`, `sprop-sps` and `sprop-pps` parameters of an SDP transport file, in-band through the H.265 bitstream or in-and-out-of-band usign both mechanisms. See the [Parameter Sets](#parameter-sets) section for more details.
+  All the parameter sets used by the bitstream MUST be compliant with the `profile-space`, `profile-id`, `profile-compatibility-indicator`, `interop-constraints`, `level-id` and `tier-flag` explicitly or implicitly declared in the stream's associated SDP transport file. The parameter sets MAY be specified out-of-band using the `sprop-vps`, `sprop-sps` and `sprop-pps` parameters of an SDP transport file, in-band through the H.265 bitstream or in-and-out-of-band using both mechanisms. See the [Parameter Sets](#parameter-sets) section for more details.
 
   A Receiver supporting `in_and_out_of_band` MUST also support the `in_band` and `out_of_band` modes. Such Receiver SHOULD have all "in_band", "out_of_band" and "in_and_out_of_band" values enumerated in the Receiver Capabilities in order to allow Senders operating in any `parameter_sets_transport_mode`.
 
@@ -325,7 +325,7 @@ For Receivers indicating `urn:x-nmos:format:video` for the `format` attribute, t
 
   Informative note: The out of band mechanism used to transmit parameter sets is transport specific and out of the scope of this specification.
 
-  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitly or implicitly declared using and out-of-band transport specific mechanism or in the members profile_space, profile_idc, profile_compatibility_indication, level_idc, tier_flag, progressive_source_flag, interlaced_source_flag, non_packed_constraint_flag, frame_only_constraint_flag and copied_44bits of the HEVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MAY be specified in-band through the H.265 bitstream, out-of-band or in-and-out-of-band usign an unspecified out-of-band mechanisms. See the [Parameter Sets](#parameter-sets) section for more details.
+  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitly or implicitly declared using an out-of-band transport specific mechanism. The parameter sets MAY be specified in-band through the H.265 bitstream, out-of-band using an unspecified mechanism or in-and-out-of-band using both mechanisms. See the [Parameter Sets](#parameter-sets) section for more details.
 
   A Receiver supporting `in_and_out_of_band` MUST also support the `in_band` and `out_of_band` modes. Such Receiver SHOULD have all "in_band", "out_of_band" and "in_and_out_of_band" values enumerated in the Receiver Capabilities in order to allow Senders operating in any `parameter_sets_transport_mode`.
 
@@ -339,7 +339,7 @@ For Receivers indicating `urn:x-nmos:format:mux` for the `format` attribute, the
 - [Parameter Sets Transport Mode](https://specs.amwa.tv/nmos-parameter-registers/branches/main/capabilities/#parameter-sets-transport-mode)  
   A Receiver declares the `parameter_sets_transport_mode` capability to indicate that it supports bitstreams using parameter sets provided either only out-of-band, only in-band or in-and-out-of-band. The in-band parameter sets MAY update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `in_band` or `in_and_out_of_band` capabilities MUST be capable of decoding in-band parameter sets that update, augment or duplicate the parameter sets received out-of-band. A Receiver declaring the `out_of_band` capability MUST be capable of decoding in-band parameter sets that duplicate the parameter sets received out-of-band.
 
-  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitly or implicitly declared in the members profile_idc, level_idc and constraint_set\<N\>_flag of the AVC_video_descriptor of an MPEG2-TS transport stream. The parameter sets MUST be specified in-band through the H.265 bitstream. See the [Parameter Sets](#parameter-sets) section for more details.
+  All the parameter sets used by the bitstream MUST be compliant with the profile and level explicitly or implicitly declared in the transport stream. The parameter sets MUST be specified in-band through the H.265 bitstream. See the [Parameter Sets](#parameter-sets) section for more details.
 
   A Receiver consuming H.265 from a multiplexed stream MUST support the `in_band` mode or be unconstrained.
 
@@ -373,7 +373,9 @@ An H.265 stream MAY transport in-band parameter sets to update or duplicate para
 
 The `sprop-vps`, `sprop-sps` and `sprop-pps` parameters MAY be used by the Receiver to assert the `parameter_sets_transport_mode` in use by the Sender. The in-and-out-of-band mode is signaled if `sprop-vps`, `sprop-sps` and `sprop-pps` are present and not empty, and terminate by an empty NAL unit (i.e. an empty byte sequence that is base64 encoded). An `sprop-vps`, `sprop-sps` and `sprop-pps` parameters terminate by an empty NAL unit if it ends by a comma ','. The terminating colon ',' indicates that more parameter sets will be received in-band, indicating the in-and-out-of-band mode. The out-of-band mode is signaled when `sprop-vps`, `sprop-sps` and `sprop-pps` are present and not empty, and not terminated by a comma ','. The in-band mode is signaled when `sprop-vps`, `sprop-sps` and `sprop-pps` are not present or empty. A Sender MUST terminate the `sprop-vps`, `sprop-sps` and `sprop-pps` parameters by a comma ',' if it operates in in-and-out-of-band mode and MUST not terminate it by a comma ',' in out-of-band mode.
 
-Informative note: It results that an H.265 Sender operating in in-and-out-of-band mode that is not sending parameter sets out-of-band will set the  `sprop-vps`, `sprop-sps` and `sprop-pps` parameters to a single comma ',' value.
+Informative note: It results that an H.265 Sender operating in in-and-out-of-band mode that is not sending parameter sets out-of-band will set the `sprop-vps`, `sprop-sps` and `sprop-pps` parameters to a single comma ',' value.
+
+Informative note: The in-and-out-of-band mode implies that the Sender can optionally use the in-band path, the out-band path or both paths to transmit parameter sets. There is no requirement to use both paths simultaneously.
 
 ### Receivers
 
